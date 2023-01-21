@@ -38,3 +38,12 @@ int isEmpty(Stack *top)
 {
     return top==NULL?1:0;
 }
+
+void printStack(Stack *top)
+{
+    while(isEmpty(top)!=1)
+    {
+        printf("%s\n",top->arr);
+        top = top->next;
+    }
+}
