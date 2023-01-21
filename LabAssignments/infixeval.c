@@ -5,16 +5,17 @@
 int prec(char ch)                        //returns the precedence of the given operator
 {
 	int c=0;
-    char pr[8]="|&-+%/*^";              //array storing operators in ascending orders of precedence
-    if(ch=='('||ch==')')                //() have the highest precedence, but we need to push an operator if they are present, hence in this particular
+    char symboltable[5] = "-+*/^";
+    int precedenceTable[] = {1,1,2,2,3};     //array storing operators in ascending orders of precedence
+    if(ch=='('||ch==')')                    //() have the highest precedence, but we need to push an operator if they are present, hence in this particular
                                         //program they have the lowest precedence
     return 0;
     else
     {
-        for(int i=0;i<8;i++)
+        for(int i=0;i<5;i++)
         {
-            if(ch==pr[i])
-            return i+1;                 //return the index of the character, which is their precedence value
+            if(ch==symboltable[i])
+            return precedenceTable[i];                 //return the index of the character, which is their precedence value
         }
     }
 }
@@ -24,6 +25,7 @@ void convertToPostfix(char *inexp, char *outexp)
     int i=0,tempCount=0,outCount=0;
     char temp[4], open[]={'(','\0'};
     Stack *top = NULL;
+    top = push(top, open);
     while(inexp[i]!='\0')
     {
         if(inexp[i]>=48 && inexp[i]<=57)
@@ -87,7 +89,8 @@ void convertToPostfix(char *inexp, char *outexp)
 
 int main()
 {
-    char inexp[] = {'(','5','+',')','\0'}, outexp[100];
+    char *path="..\\testing\\input.txt";
+    char *inexp = read(path), outexp[100];
     convertToPostfix(inexp, outexp);
     int i = 0;
     while(outexp[i]!='\0')

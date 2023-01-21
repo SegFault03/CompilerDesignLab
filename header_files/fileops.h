@@ -19,6 +19,8 @@ char* read(const char path[100])
         return NULL;
  
     fread(outexp, sizeof(char), numbytes, fp);
+    outexp[numbytes] = ')';
+    outexp[numbytes+1] = '\0';
     fclose(fp);
     return outexp;
 }
