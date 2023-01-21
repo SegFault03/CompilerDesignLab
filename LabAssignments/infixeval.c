@@ -87,15 +87,98 @@ void convertToPostfix(char *inexp, char *outexp)
     outexp[outCount] = '\0';
 }
 
+int getNum(char *numchar)
+{
+    int j = -1, num = 0;
+    while(numchar[++j]!='$')
+    num = num*10 + (numchar[j]-'0');
+    return num;
+}
+
+int evaluatePostfix(char *inexp)
+{
+    int i=0, num=0, tempCount=0;
+    char temp[5];
+    Stack *top = NULL;
+    while(inexp[i]!='\0')
+    {
+        if(inexp[i]>=48 && inexp[i]<=57)
+        {
+            //Make the number
+            temp[tempCount] = inexp[i];
+            tempCount++;
+        }
+        else if(inexp[i]=='$')
+        {
+            temp[tempCount] = '$';
+            top = push(top,temp);
+            tempCount = 0;
+        }
+        else
+        {
+            int num1 = getNum(top->arr);
+            top = pop(top);
+            int num2 = getNum(top->arr);
+            top = pop(top);
+            int result = 0;
+            switch(inexp[i])
+            {
+                case '+':
+                result = num1 + num2;
+                break;
+
+                case '-':
+                result = num2 - num1;
+                break;
+
+                case '*':
+                result = num1 * num2;
+                break;
+
+                case '/':
+                result = num2 / num1;
+                break;
+
+                case '^':
+                result = num1 ^ num2;
+                break;
+            }
+            
+            int fact = 10, count=1;
+            while(result/fact>0)
+            {
+                fact*=10; 
+                count++;
+            }
+
+            tempCount = count;
+            temp[tempCount--] ='$';
+            while(result>0)
+            {
+                temp[tempCount] = (result%10)+'0';
+                tempCount--;
+                result/=10;
+            }
+
+            top = push(top, temp);
+            tempCount = 0;
+        }
+        i++;
+    }
+    
+    return getNum(top->arr);
+}
+
 int main()
 {
     char *path="..\\testing\\input.txt";
     char *inexp = read(path), outexp[100];
     convertToPostfix(inexp, outexp);
     int i = 0;
-    while(outexp[i]!='\0')
-    {
-        printf("%c",outexp[i]);
-        i++;
-    }
+    // while(outexp[i]!='\0')
+    // {
+    //     printf("%c",outexp[i]);
+    //     i++;
+    // }
+    printf("\nThe result is: %d",evaluatePostfix(outexp));
 }
