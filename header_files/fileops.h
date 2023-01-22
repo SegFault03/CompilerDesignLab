@@ -1,6 +1,18 @@
+/**
+ * Reads the contents of a file.
+ * See ../testing/FileOpsDriver.c for usecases.
+*/
+
 #include<stdio.h>
 #include<stdlib.h>
 
+/**
+ * reads the conents of a given file.
+ * 
+ * Note: Adds a ')' at the end of file contents to help with postfix conversion.
+ * @param path the filepath whose contents are to be read
+ * @return NULL if filepath does not exist, character array containing file contents otherwise.
+*/
 char* read(const char path[100])
 {
     FILE *fp;
