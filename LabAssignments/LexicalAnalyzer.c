@@ -4,7 +4,24 @@
 #include "../header_files/stack.h"
 #include"../header_files/fileops.h"
 
-void getKeyword(char *word)
+int getSpecialChars(char ch)
+{
+  char specialChars[7] = {';',',',':','(',')','{','}'};
+  int n = 0;
+  while(n<7)
+  {
+    if(ch==specialChars[n])
+    {
+      // printf("\nSpecial Char = %c",ch);
+      return 1;
+    }
+    n++;
+  }
+  return 0;
+}
+
+
+int getKeyword(char *word)
 {
     int i;
     char *keywords[] = {"auto","break",	"case",	"char",	"const",	"continue",	"default",	"do",
@@ -14,21 +31,29 @@ void getKeyword(char *word)
   n = keywords;
   while (*n != "") {
     if(strcmp(*n,word)==0)
-    printf("\n%s",word);
+    {
+      printf("\nKeyword -> %s",word);
+      return 1;
+    }
     n++;
   }
+  return 0;
 }
 
-void getOperators(char *word)
+int getOperators(char *word)
 {
     char *delimeters[] =  {"+","/","-","*","%","++","--","=","+=","-=","/=","*=","%=","&=",
     "|=","^=",">>=","<<="}, **n;
   n = delimeters;
   while (*n != "") {
     if(strcmp(*n,word)==0)
-    printf("\n%s",word);
+    {
+      printf("\nOperator -> %s",word);
+      return 1;
+    }
     n++;
   }
+  return 0;
 }
 
 int main()
@@ -37,20 +62,29 @@ int main()
     char *out = NULL;
     int i,c=0;
     out = read(path);
-    printf("%s",out);
+    //printf("%s",out);
     char tempwrd[10];
     for(i=0;i<strlen(out);i++)
     {
-        if((out[i]>=48 && out[i]<=57 )|| (out[i]>=97 && out[i]<=122))
+        if(out[i]=='\n'||out[i]=='\'')
+        continue;
+        if((out[i]>=48 && out[i]<=57 )|| (out[i]>=97 && out[i]<=122) ||out[i]=='.')
         {
             tempwrd[c] = out[i];
             c++;
         }
         
-        else if(out[i]==' '||out[i]==';'||out[i]=='\n')
+        else if(getSpecialChars(out[i])==1||out[i]=='\n'||out[i]==' ')
         {
             tempwrd[c] = '\0';
-            getKeyword(tempwrd);
+            if(tempwrd[0]=='\000')
+            continue;
+            if(getKeyword(tempwrd)!=1 && (out[i]!=' '||out[i]!=';'||out[i]!='\n'))
+            {
+              printf("\nOperand -> %s",tempwrd);
+              if(out[i]!=' ')
+              printf("\nSpecial Char -> %c",out[i]);
+            }
             c = 0;
         }
         else
